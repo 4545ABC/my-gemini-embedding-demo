@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>State Transition Diagram Editor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        #cy { width: 100%; height: 500px; border: 1px solid #ccc; }
+        body { font-family: sans-serif; }
+    </style>
+</head>
+<body>
+    <h1>State Transition Editor</h1>
+    <button onclick="addNode()">Add Node</button>
+    <button onclick="exportPNG()">Export PNG</button>
+    <div id="cy"></div>
+    <script>
+        var cy = cytoscape({
+            container: document.getElementById('cy'),
+            elements: [],
+            style: [
+                { selector: 'node', style: { 'label': 'data(id)', 'background-color': '#666' } },
+                { selector: 'edge', style: { 'curve-style': 'bezier', 'target-arrow-shape': 'triangle' } }
+            ],
+            layout: { name: 'grid' }
+        });
+
+        function addNode() {
+            let id = prompt("Node Name:");
+            if (id) cy.add({ data: { id: id } });
+        }
+
+        function exportPNG() {
+            html2canvas(document.querySelector("#cy")).then(canvas => {
+                let link = document.createElement('a');
+                link.download = 'diagram.png';
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
