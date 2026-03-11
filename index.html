@@ -13,6 +13,7 @@
 <body>
     <h1>State Transition Editor</h1>
     <button onclick="addNode()">Add Node</button>
+    <button onclick="addEdge()">Add Transition (Edge)</button>
     <button onclick="exportPNG()">Export PNG</button>
     <div id="cy"></div>
     <script>
@@ -20,15 +21,35 @@
             container: document.getElementById('cy'),
             elements: [],
             style: [
-                { selector: 'node', style: { 'label': 'data(id)', 'background-color': '#666' } },
-                { selector: 'edge', style: { 'curve-style': 'bezier', 'target-arrow-shape': 'triangle' } }
+                { selector: 'node', style: { 'label': 'data(id)', 'background-color': '#666', 'text-valign': 'center', 'color': '#fff' } },
+                { selector: 'edge', style: { 
+                    'label': 'data(label)', 
+                    'curve-style': 'bezier', 
+                    'target-arrow-shape': 'triangle',
+                    'font-size': '12px',
+                    'text-background-opacity': 1,
+                    'text-background-color': '#fff'
+                } }
             ],
             layout: { name: 'grid' }
         });
 
         function addNode() {
-            let id = prompt("Node Name:");
+            let id = prompt("Enter Node Name:");
             if (id) cy.add({ data: { id: id } });
+        }
+
+        function addEdge() {
+            let source = prompt("Enter Source Node:");
+            let target = prompt("Enter Target Node:");
+            let label = prompt("Enter Transition Condition:");
+            if (source && target) {
+                try {
+                    cy.add({ data: { source: source, target: target, label: label } });
+                } catch(e) {
+                    alert("Error: Node might not exist.");
+                }
+            }
         }
 
         function exportPNG() {
